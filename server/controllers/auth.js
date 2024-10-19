@@ -68,11 +68,11 @@ exports.registerCompany = async (req, res) => {
 
     try {
       // Send the verification email
-      // const sentEmail = await sendEmail({
-      //   to: company.companyEmail,
-      //   subject: "Your OTP for Email Verification",
-      //   html: `Your OTP is ${otp}. It will expire in 15 minutes.`,
-      // });
+      const sentEmail = await sendEmail({
+        to: company.companyEmail,
+        subject: "Your OTP for Email Verification",
+        html: `Your OTP is ${otp}. It will expire in 15 minutes.`,
+      });
       // // send verification otp to mobile
       // const accountSid = process.env.TWILIO_ACCOUNT_SID;
       // const authToken = process.env.TWILIO_AUTH_TOKEN;
