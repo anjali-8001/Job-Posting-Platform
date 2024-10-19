@@ -8,7 +8,14 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.ORG_URL,
+    methods: ["POST", "GET"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
 
 app.use(bodyParser.json({ limit: "10mb" }));
 
