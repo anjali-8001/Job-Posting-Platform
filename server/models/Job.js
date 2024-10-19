@@ -2,6 +2,16 @@ const mongoose = require("mongoose");
 
 const JobSchema = new mongoose.Schema(
   {
+    user: {
+      id: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+      email: {
+        type: String,
+        required: true,
+      },
+    },
     title: {
       type: String,
       required: true,

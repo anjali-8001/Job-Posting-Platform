@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import user from "../../src/assets/name.png";
-import mail from "../../src/assets/mail.png"; 
+import mail from "../../src/assets/mail.png";
 import vector from "../../src/assets/Vector.png";
 import groups from "../../src/assets/groups.png";
 import { PiPasswordThin } from "react-icons/pi";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/Features/userSlice";
 
 const Signup = () => {
   const [name, setName] = useState("");
@@ -17,6 +19,7 @@ const Signup = () => {
   const [mobile, setMobile] = useState();
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -34,8 +37,8 @@ const Signup = () => {
       );
 
       if (response?.data?.success) {
-        sessionStorage.setItem("companyEmail", response?.data?.data);
         toast.success(response?.data?.message);
+        dispatch(setUser(response?.data?.data));
         navigate("/verification");
       } else {
         toast.error(response?.data?.message);

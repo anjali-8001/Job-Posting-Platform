@@ -13,7 +13,6 @@ import check from "../assets/check_circle.png";
 const Verification = () => {
   const [companyEmail, setCompanyEmail] = useState();
   const { user } = useSelector((state) => state?.user);
-  console.log(user);
 
   const [emailOtp, setEmailOtp] = useState("");
   const [mobileOtp, setMobileOtp] = useState("");
@@ -25,7 +24,7 @@ const Verification = () => {
       const response = await axios.post(
         `${process.env.REACT_APP_API}/auth/verify-email`,
         {
-          companyEmail,
+          companyEmail: user?.companyEmail,
           otp: emailOtp,
         }
       );
@@ -33,6 +32,7 @@ const Verification = () => {
       if (response?.data?.success) {
         toast.success(response?.data?.message);
         dispatch(setUser(response?.data?.data));
+
         if (response?.data?.token) {
           localStorage.setItem("auth", response?.data?.token);
           navigate("/");
@@ -48,11 +48,10 @@ const Verification = () => {
 
   const handleVerifyMobile = async () => {
     try {
-      console.log("email", companyEmail);
       const response = await axios.post(
         `${process.env.REACT_APP_API}/auth/verify-mobile`,
         {
-          companyEmail,
+          companyEmail: user?.companyEmail,
           otp: mobileOtp,
         }
       );
@@ -60,6 +59,7 @@ const Verification = () => {
       if (response?.data?.success) {
         toast.success(response?.data?.message);
         dispatch(setUser(response?.data?.data));
+
         if (response?.data?.token) {
           localStorage.setItem("auth", response?.data?.token);
           navigate("/");
@@ -72,14 +72,6 @@ const Verification = () => {
       toast.error(error?.response?.data?.message);
     }
   };
-
-  useEffect(() => {
-    setCompanyEmail(sessionStorage.getItem("companyEmail"));
-  }, []);
-
-  useEffect(() => {
-    console.log(companyEmail);
-  }, [companyEmail]);
 
   return (
     <>

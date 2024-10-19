@@ -47,7 +47,6 @@ exports.registerCompany = async (req, res) => {
       password: hashedPassword,
     });
 
-    console.log(company);
     const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
     const otpExpires = Date.now() + 15 * 60 * 1000; // OTP expires in 15 minutes
 
@@ -63,8 +62,6 @@ exports.registerCompany = async (req, res) => {
       mobileOtp: mobileotp,
       mobileOtpExpires: otpExpires,
     });
-    const u = await UserOtp.findById(user._id);
-    console.log("u", u);
 
     try {
       // Send the verification email
@@ -93,7 +90,7 @@ exports.registerCompany = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "You've successfully signed up.",
-      data: companyEmail,
+      data: company,
     });
   } catch (error) {
     console.log(error);
@@ -302,6 +299,10 @@ exports.createJobPost = async (req, res) => {
       experienceLevel,
       candidates: candidates.map((email) => ({ email })),
       endDate,
+      user: {
+        id: company._id,
+        email: company.companyEmail,
+      },
     });
 
     const jobDetailsHtml = `
@@ -341,8 +342,15 @@ exports.createJobPost = async (req, res) => {
 
 exports.getJobPosts = async (req, res) => {
   try {
+    const userId = req.user.userId;
+    if (!userId) {
+      return res.status(400).json({
+        success: false,
+        message: "Unauthorized.",
+      });
+    }
     // Fetch all job posts from the database
-    const jobs = await Job.find();
+    const jobs = await Job.find({ "user.id": userId });
 
     // Check if there are no jobs
     if (jobs.length === 0) {

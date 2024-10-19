@@ -9,6 +9,7 @@ import { clearUser } from "../redux/Features/userSlice";
 const Navbar = () => {
   const { user } = useSelector((state) => state.user);
   const [showDropdown, setShowDropdown] = useState(false);
+  const token = localStorage.getItem("auth");
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -19,7 +20,7 @@ const Navbar = () => {
         <a href="" className="text-2xl font-medium text-[#576474]">
           Contact
         </a>
-        {user?.name && (
+        {user?.name && token && (
           <div className="relative">
             <button
               className="flex gap-4 items-center justify-center border border-[#83909F] px-6 py-4 rounded-md"

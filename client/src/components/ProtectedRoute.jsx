@@ -26,7 +26,12 @@ export function ProtectedRoute() {
 
   useEffect(() => {
     if (token) authUserCheck();
+    else {
+      navigate("/login");
+    }
   }, [token]);
 
-  return ok ? <Outlet /> : <>{navigate("/signup")}</>;
+  if (!ok) return null;
+
+  return <Outlet />;
 }
